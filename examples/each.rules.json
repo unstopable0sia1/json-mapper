@@ -1,0 +1,12 @@
+{
+  "version": 1,
+  "name": "Mỗi order thành một bản ghi mới",
+  "mode": "each",
+  "source_root": "orders",
+  "output_root": "payload.rows",
+  "rules": [
+    {"from": "id", "to": "code"},
+    {"from": "amount", "to": "total", "transforms": ["integer"]},
+    {"value": "VND", "to": "currency"}
+  ]
+}

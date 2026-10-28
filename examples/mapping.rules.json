@@ -1,0 +1,21 @@
+{
+  "version": 1,
+  "name": "Ví dụ đổi cấu trúc JSON",
+  "mode": "document",
+  "source_root": "$",
+  "output_root": "$",
+  "base": "empty",
+  "missing": "error",
+  "on_conflict": "error",
+  "rules": [
+    {"from": "a.a", "to": "b.b"},
+    {"from": "customer.name", "to": "profile.display_name", "transforms": ["trim"]},
+    {"from": "customer.age", "to": "profile.age", "transforms": ["integer"]},
+    {"from": "customer.active", "to": "profile.active", "transforms": ["boolean"]},
+    {"from": "customer.email", "to": "profile.email", "missing": "default", "default": null},
+    {"from": "orders[*].id", "to": "items[*].code"},
+    {"from": "orders[*].amount", "to": "items[*].total", "transforms": ["integer"]},
+    {"from": "orders[*].tags", "to": "items[*].tags", "transforms": [{"op": "split", "separator": ","}]},
+    {"value": "VND", "to": "meta.currency"}
+  ]
+}

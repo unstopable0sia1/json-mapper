@@ -1,0 +1,8 @@
+{
+  "a": {"a": "Xin chào"},
+  "customer": {"name": "  Nguyễn An  ", "age": "27", "active": "false"},
+  "orders": [
+    {"id": "DH-001", "amount": "125000", "tags": "sách,học tập"},
+    {"id": "DH-002", "amount": "98000", "tags": "bút,văn phòng"}
+  ]
+}
