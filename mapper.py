@@ -270,6 +270,8 @@ def validate_config(config):
     allowed = {"version", "name", "mode", "source_root", "output_root", "base", "template", "missing", "on_conflict", "rules"}
     if set(config) - allowed:
         raise MappingError(f"Thuộc tính cấu hình không hỗ trợ: {sorted(set(config) - allowed)}")
+    if "name" in config and not isinstance(config["name"], str):
+        raise MappingError("name phải là chuỗi.")
     if type(config.get("version", 1)) is not int or config.get("version", 1) != 1:
         raise MappingError("Chỉ hỗ trợ version=1.")
     for key, default, choices in (("mode", "document", ("document", "each")),
@@ -292,6 +294,8 @@ def validate_config(config):
             raise MappingError(prefix + ": rule có thuộc tính không hỗ trợ.")
         if type(rule.get("enabled", True)) is not bool:
             raise MappingError(prefix + ": enabled phải là boolean.")
+        if "name" in rule and not isinstance(rule["name"], str):
+            raise MappingError(prefix + ": name phải là chuỗi.")
         if ("from" in rule) == ("value" in rule):
             raise MappingError(prefix + ": chọn đúng một trong from hoặc value.")
         target = parse_path(rule.get("to"))

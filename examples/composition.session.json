@@ -1,0 +1,37 @@
+{
+  "kind": "json-composer-session",
+  "version": 1,
+  "sources": {
+    "A": {
+      "customer": {"name": "  Nguyễn An  ", "age": "27"},
+      "orders": [{"id": "DH-001", "amount": "125000"}, {"id": "DH-002", "amount": "98000"}]
+    },
+    "B": {
+      "profile": {"full_name": "", "age": 0, "email": null, "old_status": "active"},
+      "items": [],
+      "meta": {"obsolete": true}
+    },
+    "C": {"currency": "VND", "status_field": "status"}
+  },
+  "config": {
+    "kind": "json-composer",
+    "version": 1,
+    "template": {
+      "profile": {"full_name": "", "age": 0, "email": null, "old_status": "active"},
+      "items": [],
+      "meta": {"obsolete": true}
+    },
+    "rules": [
+      {"from": "value:A:$.customer.name", "to": "field:B:$.profile.full_name", "transforms": ["trim"]},
+      {"from": "value:A:$.customer.age", "to": "field:B:$.profile.age", "transforms": ["integer"]},
+      {"from": "value:A:$.customer.email", "to": "field:B:$.profile.email", "missing": "default", "default": "Chưa có email"},
+      {"from": "value:A:$.orders[*].id", "to": "items[*].code"},
+      {"from": "value:A:$.orders[*].amount", "to": "items[*].total", "transforms": ["integer"]},
+      {"from": "value:C:$.currency", "to": "meta.currency"},
+      {"from": "field:B:$.profile.full_name", "to": "meta.name_field"},
+      {"value": "JSON Mapper", "to": "meta.generator"},
+      {"op": "rename", "to": "field:B:$.profile.old_status", "from": "value:C:$.status_field"},
+      {"op": "delete", "to": "field:B:$.meta.obsolete"}
+    ]
+  }
+}

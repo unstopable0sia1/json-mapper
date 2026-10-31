@@ -50,6 +50,56 @@ class GuiTests(unittest.TestCase):
         self.assertEqual(len(self.app.config["rules"]), 8)
         self.assertTrue(self.app.run())
 
+    def test_rule_actions_follow_selection_count(self):
+        def assert_actions(single, delete):
+            for label in ("Sửa", "↑", "↓"):
+                self.assertEqual(self.app.rule_buttons[label].instate(["!disabled"]), single)
+            self.assertEqual(self.app.rule_buttons["Xóa"].instate(["!disabled"]), delete)
+            self.assertTrue(self.app.rule_buttons["+ Thêm"].instate(["!disabled"]))
+
+        self.assertEqual(str(self.app.table["selectmode"]), "extended")
+        assert_actions(False, False)
+        self.app.table.selection_set("1")
+        self.root.update()
+        assert_actions(True, True)
+        self.app.table.selection_add("3")
+        self.root.update()
+        assert_actions(False, True)
+        before = dumps(self.app.config)
+        with patch("app.RuleDialog") as dialog:
+            self.app.rule_buttons["Sửa"].invoke()
+            self.app.edit_rule()  # Also guard callbacks such as double-click.
+            self.app.move_rule(-1)
+            self.app.move_rule(1)
+        dialog.assert_not_called()
+        self.assertEqual(dumps(self.app.config), before)
+        self.app.table.selection_remove("3")
+        self.root.update()
+        assert_actions(True, True)
+        self.app.table.selection_remove("1")
+        self.root.update()
+        assert_actions(False, False)
+
+    def test_delete_multiple_rules_and_all_rules(self):
+        before = list(self.app.config["rules"])
+        self.app.table.selection_set("1", "3", "5")
+        self.root.update()
+        self.app.rule_buttons["Xóa"].invoke()
+        self.assertEqual(self.app.config["rules"],
+                         [rule for index, rule in enumerate(before) if index not in (1, 3, 5)])
+        self.assertEqual(len(self.app.table.get_children()), 6)
+        self.assertIsNone(self.app.current_result)
+        self.assertTrue(self.app.export_button.instate(["disabled"]))
+        self.assertTrue(self.app.rule_buttons["Xóa"].instate(["disabled"]))
+        self.app.table.selection_set(*self.app.table.get_children())
+        self.app.delete_rule()
+        self.root.update()
+        self.assertEqual(self.app.config["rules"], [])
+        self.assertEqual(self.app.table.get_children(), ())
+        self.assertTrue(self.app.rule_buttons["Sửa"].instate(["disabled"]))
+        self.assertTrue(self.app.rule_buttons["Xóa"].instate(["disabled"]))
+        self.app.delete_rule()  # Empty selection is a no-op.
+
     def test_rule_editor_builds_array_mapping(self):
         dialog = RuleDialog(self.root)
         dialog.source.set("rows[*].name")

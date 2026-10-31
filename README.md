@@ -1,7 +1,9 @@
 # JSON Mapper
 
-Tool desktop chuyển cấu trúc **một file JSON sang một file JSON khác** theo bộ
-rule tùy chỉnh. Đặt tại `D:\HelloWorld\NCKH2026\json-mapper`.
+Tool desktop chuyển cấu trúc JSON theo bộ rule tùy chỉnh, gồm chế độ mapping
+một nguồn và cửa sổ **Ghép nhiều JSON** để lấy giá trị/field từ nhiều nguồn,
+điền vào một mẫu cấu trúc đích có thể chỉnh sửa.
+Đặt tại `D:\HelloWorld\AutoTool\json-mapper`.
 Python 3.10+ và Tkinter; chỉ dùng thư viện chuẩn. Máy hiện tại đã có Python/Tk.
 Dữ liệu được xử lý cục bộ, không gọi API hoặc tải lên dịch vụ khác.
 
@@ -10,12 +12,15 @@ Dữ liệu được xử lý cục bộ, không gọi API hoặc tải lên d�
 Nhấp đúp **`start.cmd`**, hoặc chạy:
 
 ```powershell
-Set-Location -LiteralPath 'D:\HelloWorld\NCKH2026\json-mapper'
+Set-Location -LiteralPath 'D:\HelloWorld\AutoTool\json-mapper'
 python -X utf8 app.py
 ```
 
 1. Bấm **Mở JSON nguồn** hoặc dán JSON vào ô bên trái.
 2. Bấm **+ Thêm** để thêm rule; nhấp đúp một hàng để sửa. Dùng ↑/↓ để đổi thứ tự.
+   Giữ **Ctrl + nhấp** để chọn nhiều rule hoặc **Shift + nhấp** để chọn một dải;
+   **Xóa** sẽ xóa toàn bộ rule đang chọn. **Sửa**, **↑/↓** chỉ bật khi chọn đúng
+   một rule; khi không chọn rule nào, **Xóa** cũng bị khóa.
 3. Đặt `Path nguồn`, `Path đích`, phép biến đổi và chính sách khi thiếu field.
 4. Bấm **Chuyển đổi (F5)** để xem trước JSON kết quả và báo cáo. Bước này chưa ghi file.
 5. Bấm **Xuất JSON…** để chọn file kết quả.
@@ -29,6 +34,168 @@ Tab **Path nguồn** quét cấu trúc JSON và cho copy path bằng nhấp đú
 là path toàn bộ nguồn; khi đặt `Gốc nguồn` hoặc dùng `each`, sửa path rule theo
 gốc/bản ghi đã chọn. Tab này quét tối đa 3.000 path/20.000 nút; không cắt dữ liệu
 chuyển đổi.
+
+## Rule custom và hiển thị JSON
+
+Cả cửa sổ mapping và ghép nhiều nguồn đều có **+ Custom JSON…** để nhập một
+object rule hoặc mảng rule. Chọn đúng một rule rồi bấm **Sửa JSON…** để sửa
+nguyên nội dung của rule đó; nút này bị khóa khi chọn nhiều rule hoặc không chọn.
+
+Ví dụ ở chế độ một nguồn:
+
+```json
+[
+  {"from": "customer.name", "to": "custom.name", "transforms": ["trim"]},
+  {"value": "VND", "to": "custom.currency"}
+]
+```
+
+Ví dụ ở chế độ nhiều nguồn (đã nạp bí danh A và B):
+
+```json
+{"from": "value:A:$.customer.name", "to": "field:B:$.profile.full_name", "transforms": ["trim"]}
+```
+
+Bấm **Kiểm tra** để xem lỗi ngay trong hộp thoại. Khi **Thêm rule / Lưu rule**,
+ứng dụng luôn kiểm tra lại các trường được phép, loại giá trị, path, wildcard,
+prefix, transforms và chạy thử **toàn bộ bộ rule với JSON hiện tại**. Có lỗi thì
+không thêm/sửa rule nào, không mất nội dung đang nhập và không thay preview cũ.
+Một nhóm rule chỉ được thêm khi tất cả cùng hợp lệ. Form **+ Thêm / Sửa** và
+nút áp dụng cấu hình JSON nâng cao cũng kiểm tra chạy thử trước khi lưu thay đổi.
+
+Custom rule dùng các phép biến đổi đã hỗ trợ; có thể kết hợp nhiều transforms,
+default, lookup, hằng số và các thao tác cấu trúc ở chế độ nhiều nguồn. Các trường
+ngoài quy ước, operation không hỗ trợ và cú pháp thực thi Python/JavaScript đều
+không được chấp nhận. `name` nếu khai báo phải là string; `enabled` phải là boolean.
+Khi thiếu dữ liệu cần thiết, sửa/nạp JSON trước hoặc dùng `missing: "skip"`,
+`missing: "default"` kèm `default`, hay tạm đặt `enabled: false` cho rule hợp lệ
+về cú pháp chưa muốn chạy. Việc kiểm tra không ghi file và không sửa nguồn.
+
+JSON khi hiển thị được xuống dòng theo cấu trúc và thụt bằng **Tab** (rộng bốn
+cột), có thanh cuộn ngang. Trong ô cho phép sửa:
+
+- **Định dạng JSON** hoặc **Ctrl+Shift+F**: định dạng lại JSON đang nhập; JSON lỗi
+  giữ nguyên nội dung và báo **JSON lỗi**, có thể bấm chuyển đổi/kiểm tra để xem
+  thông báo lỗi chi tiết. Có thể undo thao tác định dạng bằng Ctrl+Z.
+- **Tab / Shift+Tab**: tăng/giảm thụt dòng, hỗ trợ cả khối được bôi chọn.
+- **Ctrl+Tab / Ctrl+Shift+Tab**: chuyển focus sang ô/điều khiển kế tiếp hoặc trước đó.
+- **Enter**: giữ cấp thụt hiện tại và tăng thêm một cấp sau `{` hoặc `[`.
+
+Nội dung không tự nhảy/thay định dạng khi đang gõ. Nguồn, mẫu, kết quả và rule
+khi được nạp/hiển thị dùng Tab; dữ liệu và định dạng file xuất vẫn theo quy ước
+JSON hiện có. Trong chế độ nhiều nguồn, bảng **Field / value tham khảo** có cây
+cha/con để bung/thu nhánh; nút copy luôn lấy đúng path đầy đủ, không kèm thụt dòng.
+
+## Ghép nhiều JSON: nguồn giá trị + nguồn cấu trúc
+
+Bấm **Ghép nhiều JSON…** trên cửa sổ chính. Chức năng này mở một cửa sổ riêng;
+cũng có thể chạy trực tiếp bằng `python -X utf8 composer_app.py`.
+
+1. Bấm **Nạp nguồn JSON…** để chọn một hoặc nhiều file. Đặt bí danh riêng cho
+   từng nguồn, ví dụ `A`, `B`, `C`. Không cố định số lượng nguồn; giới hạn thực tế
+   phụ thuộc RAM. Bí danh phân biệt hoa/thường, dùng chữ ASCII/số/`_`, không bắt
+   đầu bằng số. Nạp nguồn khác cùng bí danh bị từ chối, không thay dữ liệu cũ.
+2. Bấm **Nạp JSON cấu trúc…** để nạp mẫu đích, đặt bí danh cho nó (ví dụ `B`).
+   File này vừa được thêm vào danh sách nguồn tham khảo, vừa được copy làm mẫu.
+   Hoặc chọn một nguồn đã nạp rồi bấm **Dùng làm mẫu cấu trúc**.
+3. Trong tab **Mẫu cấu trúc · sửa được**, sửa JSON để thêm/bớt field, đổi tên,
+   thay container hoặc đặt giá trị nền. Sửa mẫu không sửa nguồn tham khảo gốc.
+4. Chọn nguồn và path trong bảng bên trái, dùng **Copy value:** hoặc **Copy field:**
+   rồi dán vào hộp thoại **+ Thêm** rule. Có thể nhập path trực tiếp.
+5. Bấm **Tạo kết quả (F5)** để xem trước; **Xuất JSON…** để lưu file.
+6. **Lưu phiên…** lưu một file chứa **toàn bộ dữ liệu nguồn**, mẫu và rule;
+   **Nạp phiên…** khôi phục chúng mà không cần tìm lại các file nguồn ban đầu.
+   Phiên không tự lưu khi đóng. Các thay đổi sẽ xóa preview, khóa xuất cho đến
+   khi chạy thành công; xuất luôn tính lại theo dữ liệu hiện tại.
+
+### Prefix tham chiếu
+
+| Cách viết | Ở nguồn giá trị (`from`) | Ở đích (`to`) |
+| --- | --- | --- |
+| `value:A:$.customer.name` | Giá trị của field trong nguồn A | Không dùng ở đích |
+| `field:B:$.profile.full_name` | Tên key cuối: `"full_name"` | Toàn bộ path `profile.full_name` lấy từ nguồn B |
+| `profile.full_name` | Không dùng ở nguồn của chế độ ghép | Path đích tự đặt, được phép tạo field mới |
+
+`field:` trỏ tới key object; không trỏ tới gốc `$` hoặc index mảng. Trong `to`,
+nguồn tham khảo và field phải tồn tại (mảng rỗng được chấp nhận làm container
+cho path `[*]`). Prefix không phải biểu thức thực thi; hằng số chứa chữ
+`"value:A:$.name"` vẫn là chuỗi nguyên văn, không tự thay thế.
+
+Ví dụ nguồn A:
+
+```json
+{"customer": {"name": "  Nguyễn An  "}}
+```
+
+Nguồn B dùng làm mẫu cấu trúc:
+
+```json
+{"profile": {"full_name": "", "email": null}}
+```
+
+Trong **+ Thêm**, chọn **Nguồn giá trị = from**, nhập:
+
+| Mục | Giá trị |
+| --- | --- |
+| Path nguồn | `value:A:$.customer.name` |
+| Path đích | `field:B:$.profile.full_name` |
+| Chuỗi phép biến đổi | `["trim"]` |
+
+Kết quả: `{"profile":{"full_name":"Nguyễn An","email":null}}`.
+Thêm nguồn C rồi dùng `value:C:$.currency` → `meta.currency` để bổ sung dữ liệu.
+Chọn **Nguồn giá trị = value** để điền một hằng số JSON, không cần tham chiếu.
+`missing`, `default`, `transforms` và bật/tắt rule dùng tương tự chế độ một nguồn.
+
+### Rule sửa cấu trúc
+
+Trong hộp thoại rule, chọn **Thao tác**:
+
+- `set`: thêm/ghi giá trị vào path đích.
+- `delete`: xóa key khỏi JSON kết quả; chỉ cần nhập Path đích. Có thể đặt
+  `missing: "skip"` nếu key không tồn tại. Không xóa nguyên gốc hoặc phần tử mảng.
+- `rename`: Path đích là key hiện có cần đổi tên; nguồn tham chiếu hoặc hằng số
+  là **tên key mới**, không phải path mới. Tên có dấu chấm được giữ nguyên là
+  một key. Có thể đổi tên các field trong mảng bằng `rows[*].old`; tên mới dùng
+  chung cho chúng và nguồn tên mới không dùng `[*]`.
+
+Ví dụ cấu hình trong **Cấu hình JSON nâng cao…**:
+
+```json
+{
+  "kind": "json-composer",
+  "version": 1,
+  "template": {"profile": {"name": "", "obsolete": true}},
+  "on_conflict": "overwrite",
+  "rules": [
+    {"from": "value:A:$.customer.name", "to": "profile.name", "transforms": ["trim"]},
+    {"op": "rename", "to": "profile.name", "value": "display_name"},
+    {"op": "delete", "to": "profile.obsolete"},
+    {"value": "VND", "to": "meta.currency"}
+  ]
+}
+```
+
+Các rule chạy theo thứ tự. Mặc định `on_conflict: "error"` chặn ghi trùng/chồng
+path và đổi tên sang key đã có; chọn **Ghi chồng = overwrite** khi chủ đích sửa
+một field qua nhiều rule như ví dụ trên. Nguồn luôn được đọc từ dữ liệu gốc,
+không bị thay đổi bởi rule; `delete`/`rename` tác động vào kết quả đang xây dựng.
+Ctrl/Shift chọn nhiều rule để xóa; Sửa/↑/↓ chỉ bật khi chọn đúng một rule.
+
+Mẫu là JSON nền, **không phải JSON Schema**: giữ nguyên các giá trị và phần tử
+mảng chưa bị rule sửa/xóa, không tự làm rỗng hay nhân bản bản ghi mẫu. Dùng
+`[]` cho mảng kết quả cần tạo mới; dùng object/mảng cho parent thay vì `null`.
+`[*]` giữa nguồn và đích ghép theo index, không join theo khóa giữa các mảng.
+Không tự ghép bản ghi A/B theo `id`, không suy đoán field tương ứng. Có thể sửa
+mẫu để di chuyển cả một nhánh cấu trúc hoặc tạo các rule copy/xóa với path mới.
+
+Nút **Ví dụ 3 nguồn** mở `examples/composition.session.json`, minh họa lấy value
+từ A/C, chọn field từ B, default, mảng, hằng số, đổi tên và xóa key.
+Kết quả đối chiếu trong `examples/composition.expected.json`.
+
+Xuất kết quả bị chặn nếu trùng file nguồn đã nạp trong phiên đang chạy hoặc
+file phiên hiện tại (kể cả symlink/hardlink). Lưu phiên được phép cập nhật file
+phiên cũ nhưng không được ghi lên các file nguồn đã nạp. Nạp phiên chỉ dùng
+dữ liệu nhúng trong file, không tự mở đường dẫn hoặc truy cập mạng.
 
 ## Mapping cơ bản
 
@@ -257,3 +424,9 @@ widget/callback Tk (nạp/lưu rule, sửa input, preview, export). Có ca 10.00
 tử mảng/20.000 giá trị map, bảo toàn nguồn, chặn ghi chồng qua hardlink và
 round-trip GUI → file. GUI tests dùng dialog giả cho chọn file; chưa có kiểm
 thao tác thủ công/visual QA. `py -3` có Tk 8.6; CLI ví dụ `each --dry-run` đạt.
+
+Cập nhật 31/10/2026: **82 tests PASS**, bổ sung kiểm tra rule custom đơn/nhóm,
+từ chối cả nhóm khi lỗi, chạy thử trước khi thêm/sửa, prefix nhiều nguồn,
+giữ nguyên dữ liệu/preview khi từ chối, thụt Tab, định dạng/undo và cây cấu trúc.
+Đã kiểm tra kích thước widget ở cửa sổ 1100×700; công cụ chụp cửa sổ bị timeout,
+chưa xác minh bố cục qua ảnh chụp trong lần cập nhật này.

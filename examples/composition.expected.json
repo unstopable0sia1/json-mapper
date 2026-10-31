@@ -1,0 +1,5 @@
+{
+  "profile": {"full_name": "Nguyễn An", "age": 27, "email": "Chưa có email", "status": "active"},
+  "items": [{"code": "DH-001", "total": 125000}, {"code": "DH-002", "total": 98000}],
+  "meta": {"currency": "VND", "name_field": "full_name", "generator": "JSON Mapper"}
+}
