@@ -1,0 +1,13 @@
+{
+  "profile": {
+    "full_name": "",
+    "age": 0,
+    "email": null,
+    "old_status": "active"
+  },
+  "items": [],
+  "meta": {
+    "obsolete": true
+  },
+  "qa_keep": "preserved"
+}

@@ -1,0 +1,5 @@
+# Local diagnostics from sandbox setup; publish the final successful run.
+temp/
+automated-tests.log
+automated-tests-retry.log
+engine-tests.log

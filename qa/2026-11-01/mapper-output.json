@@ -1,0 +1,45 @@
+{
+  "b": {
+    "b": "Xin chào"
+  },
+  "profile": {
+    "display_name": "Nguyễn An",
+    "age": 27,
+    "active": false,
+    "email": null
+  },
+  "items": [
+    {
+      "code": "DH-001",
+      "total": 125000,
+      "tags": [
+        "sách",
+        "học tập"
+      ]
+    },
+    {
+      "code": "DH-002",
+      "total": 98000,
+      "tags": [
+        "bút",
+        "văn phòng"
+      ]
+    }
+  ],
+  "meta": {
+    "currency": "VND"
+  },
+  "qa": {
+    "text": "XIN CHÀO",
+    "number": 2.5,
+    "join": "a / b",
+    "lookup": "active",
+    "parsed": {
+      "ok": true
+    },
+    "serialized": "{\"x\":1}",
+    "string": "false",
+    "lower": "abc",
+    "replace": "new"
+  }
+}

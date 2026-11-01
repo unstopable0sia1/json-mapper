@@ -1,0 +1,159 @@
+{
+  "version": 1,
+  "name": "Ví dụ đổi cấu trúc JSON",
+  "mode": "document",
+  "source_root": "$",
+  "output_root": "$",
+  "base": "empty",
+  "missing": "error",
+  "on_conflict": "error",
+  "rules": [
+    {
+      "from": "a.a",
+      "to": "b.b"
+    },
+    {
+      "from": "customer.name",
+      "to": "profile.display_name",
+      "transforms": [
+        "trim"
+      ]
+    },
+    {
+      "from": "customer.age",
+      "to": "profile.age",
+      "transforms": [
+        "integer"
+      ]
+    },
+    {
+      "from": "customer.active",
+      "to": "profile.active",
+      "transforms": [
+        "boolean"
+      ]
+    },
+    {
+      "from": "customer.email",
+      "to": "profile.email",
+      "missing": "default",
+      "default": null
+    },
+    {
+      "from": "orders[*].id",
+      "to": "items[*].code"
+    },
+    {
+      "from": "orders[*].amount",
+      "to": "items[*].total",
+      "transforms": [
+        "integer"
+      ]
+    },
+    {
+      "from": "orders[*].tags",
+      "to": "items[*].tags",
+      "transforms": [
+        {
+          "op": "split",
+          "separator": ","
+        }
+      ]
+    },
+    {
+      "value": "VND",
+      "to": "meta.currency"
+    },
+    {
+      "value": "  Xin chào  ",
+      "to": "qa.text",
+      "transforms": [
+        "trim",
+        "upper"
+      ]
+    },
+    {
+      "value": "2.5",
+      "to": "qa.number",
+      "transforms": [
+        "number"
+      ]
+    },
+    {
+      "value": [
+        "a",
+        "b"
+      ],
+      "to": "qa.join",
+      "transforms": [
+        {
+          "op": "join",
+          "separator": " / "
+        }
+      ]
+    },
+    {
+      "value": "A",
+      "to": "qa.lookup",
+      "transforms": [
+        {
+          "op": "lookup",
+          "values": {
+            "A": "active"
+          }
+        }
+      ]
+    },
+    {
+      "value": "{\"ok\":true}",
+      "to": "qa.parsed",
+      "transforms": [
+        "parse_json"
+      ]
+    },
+    {
+      "value": {
+        "x": 1
+      },
+      "to": "qa.serialized",
+      "transforms": [
+        "json_string"
+      ]
+    },
+    {
+      "value": false,
+      "to": "qa.string",
+      "transforms": [
+        "string"
+      ]
+    },
+    {
+      "value": "ABC",
+      "to": "qa.lower",
+      "transforms": [
+        "lower"
+      ]
+    },
+    {
+      "value": "old",
+      "to": "qa.replace",
+      "transforms": [
+        {
+          "op": "replace",
+          "old": "old",
+          "new": "new"
+        }
+      ]
+    },
+    {
+      "from": "absent",
+      "to": "qa.skip",
+      "missing": "skip"
+    },
+    {
+      "from": "absent",
+      "to": "qa.disabled",
+      "enabled": false
+    }
+  ]
+}

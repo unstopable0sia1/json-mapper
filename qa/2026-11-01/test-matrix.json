@@ -1,0 +1,366 @@
+{
+  "tested_commit": "8d015a7",
+  "period_local": "01–02/11/2026",
+  "timezone": "Asia/Saigon",
+  "method": "Điều khiển UI Windows bằng chuột/bàn phím, quan sát ảnh chụp; chạy test suite và đối chiếu file xuất bổ trợ.",
+  "summary": {
+    "functional_ui_pass": 38,
+    "ui_defects": 2,
+    "ux_gaps": 3,
+    "existing_automated_tests_pass": 82,
+    "screenshots": 24
+  },
+  "cases": [
+    {
+      "id": "UI-01",
+      "feature": "Khởi động mapper",
+      "steps": "Mở app.py; quan sát ví dụ tự nạp.",
+      "status": "PASS",
+      "observed": "Có JSON nguồn, 9 rule và preview hợp lệ.",
+      "screenshot": "screenshots/01-mapper-demo-report.png"
+    },
+    {
+      "id": "UI-02",
+      "feature": "Chuyển đổi và báo cáo",
+      "steps": "Chạy F5; mở Báo cáo / lỗi.",
+      "status": "PASS",
+      "observed": "Ví dụ ghi 12 giá trị, 1 default, 0 skip.",
+      "screenshot": "screenshots/01-mapper-demo-report.png"
+    },
+    {
+      "id": "UI-03",
+      "feature": "14 phép biến đổi",
+      "steps": "Chạy ví dụ và nhóm 11 rule QA; xem preview, xuất file.",
+      "status": "PASS",
+      "observed": "copy/string/integer/number/boolean/trim/lower/upper/split/join/replace/lookup/parse_json/json_string cho kết quả đúng.",
+      "screenshot": "screenshots/06-all-transforms-output.png"
+    },
+    {
+      "id": "UI-04",
+      "feature": "Từ chối nhóm custom có lỗi",
+      "steps": "Nhập [{value:1,to:qa.valid},{value:2,to:bad..path}] dưới dạng JSON hợp lệ; bấm Thêm.",
+      "status": "PASS",
+      "observed": "Từ chối toàn nhóm, giữ nội dung nhập và preview cũ.",
+      "screenshot": "screenshots/04-custom-batch-rejected.png"
+    },
+    {
+      "id": "UI-05",
+      "feature": "Thêm nhóm custom hợp lệ",
+      "steps": "Nhập 11 rule; Kiểm tra → Thêm rule → F5.",
+      "status": "PASS",
+      "observed": "Kiểm tra báo 11 rule hợp lệ; thêm thành công; preview cũ bị xóa trước khi chạy lại.",
+      "screenshot": "screenshots/05-custom-valid-11-rules.png"
+    },
+    {
+      "id": "UI-06",
+      "feature": "Thêm rule bằng form",
+      "steps": "Copy $.customer.name; dán vào Path nguồn, đặt qa.copied_name; lưu và chạy.",
+      "status": "PASS",
+      "observed": "Rule được thêm; chạy thành công.",
+      "screenshot": "screenshots/09-copy-path-add-form.png"
+    },
+    {
+      "id": "UI-07",
+      "feature": "Sửa rule bằng form",
+      "steps": "Sửa hằng số của qa.text thành chuỗi Unicode đã sửa; lưu.",
+      "status": "PASS",
+      "observed": "Bảng cập nhật giá trị; preview bị vô hiệu hóa.",
+      "screenshot": null
+    },
+    {
+      "id": "UI-08",
+      "feature": "Đổi thứ tự rule",
+      "steps": "Chọn qa.text; bấm ↑ rồi ↓.",
+      "status": "PASS",
+      "observed": "Hàng dịch chuyển lên/xuống đúng một vị trí.",
+      "screenshot": null
+    },
+    {
+      "id": "UI-09",
+      "feature": "Xóa rule",
+      "steps": "Xóa rule qa.number đã có bản sao lưu.",
+      "status": "PASS",
+      "observed": "Hàng biến mất; nút thao tác khóa khi không còn chọn hàng.",
+      "screenshot": null
+    },
+    {
+      "id": "UI-10",
+      "feature": "Trạng thái nút theo lựa chọn",
+      "steps": "Quan sát khi chưa chọn và khi chọn một hàng.",
+      "status": "PASS",
+      "observed": "Sửa/Xóa/↑/↓/Sửa JSON bật hoặc khóa theo lựa chọn đơn.",
+      "screenshot": null
+    },
+    {
+      "id": "UI-11",
+      "feature": "Lưu và nạp rule",
+      "steps": "Ctrl+S lưu mapper.rules.json; sửa/xóa rule; Nạp rule từ file đã lưu; F5.",
+      "status": "PASS",
+      "observed": "Khôi phục 20 rule trước khi sửa/xóa, chạy thành công.",
+      "screenshot": null
+    },
+    {
+      "id": "UI-12",
+      "feature": "Xuất JSON một nguồn",
+      "steps": "Xuất qua hộp Save As thật thành mapper-output.json; đọc đối chiếu file.",
+      "status": "PASS",
+      "observed": "File UTF-8 chứa Unicode và đúng các giá trị QA.",
+      "screenshot": "screenshots/06-all-transforms-output.png"
+    },
+    {
+      "id": "UI-13",
+      "feature": "JSON trùng key",
+      "steps": "Thay nguồn bằng {\"x\":1,\"x\":2}; định dạng rồi F5.",
+      "status": "PASS",
+      "observed": "Báo key x bị lặp; không xuất được kết quả.",
+      "screenshot": "screenshots/07-duplicate-key-blocked.png"
+    },
+    {
+      "id": "UI-14",
+      "feature": "Undo dữ liệu nguồn",
+      "steps": "Sau ca trùng key, Ctrl+Z và F5.",
+      "status": "PASS",
+      "observed": "Nguồn mẫu và preview được khôi phục; nhãn lỗi còn tồn tại được ghi riêng tại F02.",
+      "screenshot": "screenshots/08-stale-json-error-after-success.png"
+    },
+    {
+      "id": "UI-15",
+      "feature": "Quét/copy path",
+      "steps": "Mở Path nguồn, quét; nhấp đúp $.customer.name; dán vào form.",
+      "status": "PASS",
+      "observed": "Clipboard chứa đúng path đầy đủ.",
+      "screenshot": "screenshots/09-copy-path-add-form.png"
+    },
+    {
+      "id": "UI-16",
+      "feature": "Cấu hình nâng cao và each",
+      "steps": "Áp dụng mode each, source_root orders, output_root payload.rows với 3 rule.",
+      "status": "PASS",
+      "observed": "Có hai bản ghi đúng code/total/currency trong payload.rows; các ô cấu hình đồng bộ.",
+      "screenshot": "screenshots/10-each-output-root.png"
+    },
+    {
+      "id": "UI-17",
+      "feature": "Nền source",
+      "steps": "Chọn source trong Nền đích; F5.",
+      "status": "PASS",
+      "observed": "Giữ id/amount/tags gốc cùng các field được map.",
+      "screenshot": "screenshots/11-base-source.png"
+    },
+    {
+      "id": "UI-18",
+      "feature": "Định dạng và undo",
+      "steps": "Nhập JSON gọn lồng nhau; Ctrl+Shift+F; Ctrl+Z.",
+      "status": "PASS",
+      "observed": "Định dạng thành nhiều dòng/thụt Tab; undo trả nguyên chuỗi JSON gọn.",
+      "screenshot": "screenshots/24-editor-format-undo.png"
+    },
+    {
+      "id": "UI-19",
+      "feature": "Enter/Tab/Shift+Tab",
+      "steps": "Nhập {}; đặt con trỏ giữa ngoặc; Enter; Tab; nhập field; Shift+Tab.",
+      "status": "PASS",
+      "observed": "Enter tạo dòng con; Tab tăng và Shift+Tab giảm một cấp thụt.",
+      "screenshot": null
+    },
+    {
+      "id": "UI-20",
+      "feature": "Mở file JSON lỗi",
+      "steps": "Ctrl+O mở qa/2026-11-01/invalid.json.",
+      "status": "PASS",
+      "observed": "Hộp lỗi nêu line/column; dữ liệu và preview trước đó được giữ.",
+      "screenshot": "screenshots/23-invalid-file-preserves-preview.png"
+    },
+    {
+      "id": "UI-21",
+      "feature": "Mở file JSON hợp lệ",
+      "steps": "Ctrl+O mở examples/input.json rồi F5.",
+      "status": "PASS",
+      "observed": "Nạp và chuyển đổi thành công với cấu hình each đang có.",
+      "screenshot": null
+    },
+    {
+      "id": "UI-22",
+      "feature": "Mở composer",
+      "steps": "Bấm Ghép nhiều JSON từ mapper.",
+      "status": "PASS",
+      "observed": "Cửa sổ riêng mở với nguồn/rule trống, nút xuất khóa.",
+      "screenshot": null
+    },
+    {
+      "id": "UI-23",
+      "feature": "Ví dụ ba nguồn",
+      "steps": "Bấm Ví dụ 3 nguồn.",
+      "status": "PASS",
+      "observed": "A/B/C được nạp; value/field, wildcard, default, hằng số, rename và delete cho kết quả mong đợi.",
+      "screenshot": "screenshots/12-composer-demo.png"
+    },
+    {
+      "id": "UI-24",
+      "feature": "Xuất composer",
+      "steps": "Xuất composer-output.json rồi so sánh với examples/composition.expected.json.",
+      "status": "PASS",
+      "observed": "Hai tài liệu JSON bằng nhau hoàn toàn.",
+      "screenshot": "screenshots/12-composer-demo.png"
+    },
+    {
+      "id": "UI-25",
+      "feature": "Lưu/nạp phiên",
+      "steps": "Lưu composer.session.json; bỏ A; nạp lại phiên; F5.",
+      "status": "PASS",
+      "observed": "Khôi phục A/B/C, mẫu và rule từ dữ liệu nhúng; preview đúng.",
+      "screenshot": null
+    },
+    {
+      "id": "UI-26",
+      "feature": "Bỏ nguồn đang được tham chiếu",
+      "steps": "Chọn A → Bỏ nguồn → F5.",
+      "status": "PASS",
+      "observed": "Báo rule 1 chưa nạp nguồn; xuất bị khóa.",
+      "screenshot": "screenshots/13-missing-source-error-clipped.png"
+    },
+    {
+      "id": "UI-27",
+      "feature": "Bí danh trùng",
+      "steps": "Nạp examples/input.json; nhập alias A khi A đã tồn tại.",
+      "status": "PASS",
+      "observed": "Từ chối nguồn mới; A và preview hiện có được giữ.",
+      "screenshot": "screenshots/14-duplicate-alias-rejected.png"
+    },
+    {
+      "id": "UI-28",
+      "feature": "Nạp JSON cấu trúc",
+      "steps": "Nạp template.json với alias D, chạy F5.",
+      "status": "PASS",
+      "observed": "Thêm D và dùng làm mẫu; qa_keep=preserved được giữ trong kết quả.",
+      "screenshot": "screenshots/15-loaded-template-preserved.png"
+    },
+    {
+      "id": "UI-29",
+      "feature": "Sửa mẫu độc lập",
+      "steps": "Sửa mẫu thành old_status=template và qa_keep=edited; định dạng; F5.",
+      "status": "PASS",
+      "observed": "Kết quả thay đổi; cây nguồn D vẫn có active/preserved.",
+      "screenshot": "screenshots/16-template-independent-from-source.png"
+    },
+    {
+      "id": "UI-30",
+      "feature": "Mẫu JSON lỗi",
+      "steps": "Thay mẫu bằng dấu { rồi F5.",
+      "status": "PASS",
+      "observed": "Báo lỗi parse, xóa preview và khóa xuất.",
+      "screenshot": null
+    },
+    {
+      "id": "UI-31",
+      "feature": "Dùng nguồn làm mẫu",
+      "steps": "Chọn D → Dùng làm mẫu cấu trúc → F5.",
+      "status": "PASS",
+      "observed": "Khôi phục mẫu D và kết quả hợp lệ.",
+      "screenshot": null
+    },
+    {
+      "id": "UI-32",
+      "feature": "Thu nhánh cây nguồn",
+      "steps": "Bấm tam giác cạnh profile.",
+      "status": "PASS",
+      "observed": "Các field con ẩn; các nhánh khác vẫn hiển thị.",
+      "screenshot": null
+    },
+    {
+      "id": "UI-33",
+      "feature": "Copy value và Copy field",
+      "steps": "Chọn profile của D; copy từng loại, dán vào Notepad QA.",
+      "status": "PASS",
+      "observed": "Lần lượt nhận value:D:$.profile và field:D:$.profile, không kèm thụt dòng.",
+      "screenshot": null
+    },
+    {
+      "id": "UI-34",
+      "feature": "Chặn xung đột path",
+      "steps": "Thêm hai custom rule cùng ghi qa.conflict.",
+      "status": "PASS",
+      "observed": "Báo trùng/chồng path, gợi ý overwrite, giữ preview cũ.",
+      "screenshot": "screenshots/19-composer-conflict-rejected.png"
+    },
+    {
+      "id": "UI-35",
+      "feature": "Custom rule có prefix",
+      "steps": "Thêm value:D:$.qa_keep → meta.qa_value; F5.",
+      "status": "PASS",
+      "observed": "meta.qa_value bằng preserved.",
+      "screenshot": null
+    },
+    {
+      "id": "UI-36",
+      "feature": "Sửa JSON rule và field làm nguồn",
+      "steps": "Sửa rule trên thành field:D:$.qa_keep → meta.qa_value; F5.",
+      "status": "PASS",
+      "observed": "meta.qa_value bằng tên key qa_keep.",
+      "screenshot": "screenshots/20-edit-custom-field-reference.png"
+    },
+    {
+      "id": "UI-37",
+      "feature": "Overwrite theo thứ tự",
+      "steps": "Cấu hình ghép nâng cao: hai rule ghi 1 rồi 2 vào qa.conflict; on_conflict overwrite.",
+      "status": "PASS",
+      "observed": "Áp dụng được; kết quả là 2.",
+      "screenshot": "screenshots/21-overwrite-last-rule-wins.png"
+    },
+    {
+      "id": "UI-38",
+      "feature": "Bảo vệ file nguồn",
+      "steps": "Thử xuất đè template.json là fixture đã nạp; đồng ý ghi đè trong Save As.",
+      "status": "PASS",
+      "observed": "Ứng dụng từ chối; đọc lại fixture xác nhận nội dung còn nguyên.",
+      "screenshot": "screenshots/22-source-overwrite-blocked.png"
+    },
+    {
+      "id": "UI-39",
+      "feature": "Đóng khi có thay đổi chưa lưu",
+      "steps": "Đóng composer sau thay đổi mẫu/rule; đóng mapper sau thay đổi nguồn.",
+      "status": "UX_GAP",
+      "observed": "Cửa sổ đóng không có nhắc lưu. README đã nêu không tự lưu; đây là thiếu cơ chế bảo vệ phiên, không phải vi phạm hành vi đã tài liệu hóa.",
+      "screenshot": null
+    },
+    {
+      "id": "UI-40",
+      "feature": "Bố cục mặc định/phóng to",
+      "steps": "Quan sát hai cửa sổ ở kích thước mặc định và maximize trên máy hiện tại.",
+      "status": "FAIL_UI",
+      "observed": "Thanh trạng thái/hướng dẫn bị cắt; composer không hiện các combobox Thiếu field/Ghi chồng trong vùng thấy được.",
+      "screenshot": "screenshots/18-composer-rule-options-clipped.png"
+    },
+    {
+      "id": "UI-41",
+      "feature": "Nhãn lỗi sau sửa/undo/nạp nguồn",
+      "steps": "Format JSON trùng key; undo; F5 thành công; sau đó nạp JSON nguồn hợp lệ.",
+      "status": "FAIL_UI",
+      "observed": "Nhãn đỏ JSON lỗi vẫn còn dù preview đã chạy thành công; format hợp lệ lần nữa mới xóa nhãn.",
+      "screenshot": "screenshots/08-stale-json-error-after-success.png"
+    },
+    {
+      "id": "UI-42",
+      "feature": "Khả năng đọc lỗi dài",
+      "steps": "Bỏ A rồi chạy composer; tạo mẫu JSON lỗi.",
+      "status": "UX_GAP",
+      "observed": "Thông báo lỗi nằm trên một dòng và bị cắt ngang; phần quan trọng phải cuộn ngang mới đọc được.",
+      "screenshot": "screenshots/13-missing-source-error-clipped.png"
+    },
+    {
+      "id": "UI-43",
+      "feature": "Path theo ngữ cảnh each",
+      "steps": "Đặt each/source_root=orders; quan sát danh sách Path nguồn đã quét.",
+      "status": "UX_GAP",
+      "observed": "Danh sách vẫn là path từ gốc tài liệu; cần tự chuyển về path tương đối của bản ghi, đúng giới hạn README nhưng dễ dùng sai.",
+      "screenshot": "screenshots/10-each-output-root.png"
+    }
+  ],
+  "not_screen_verified": [
+    "Ctrl/Shift+click để chọn/xóa nhiều rule: API native không hỗ trợ giữ modifier khi click; test callback/widget hiện có đã đạt. Shift+Down và Ctrl+A không mở rộng lựa chọn trong lần thử.",
+    "Chọn nhiều file trong một hộp Open; đường nạp từng file và phiên nhiều nguồn đã kiểm tra.",
+    "Ctrl+Tab/Ctrl+Shift+Tab, chọn khối nhiều dòng để indent/unindent, mọi tổ hợp phím tắt ở mọi hộp thoại.",
+    "Hiệu năng/hủy tác vụ với file lớn qua UI; dữ liệu thật; nhiều màn hình và các mức DPI khác.",
+    "Toàn bộ biên engine như scalar root, mảng rỗng/lồng sâu, mọi transform lỗi và hardlink/symlink qua màn hình; các ca có trong bộ test hiện hữu được xác minh bằng test bổ trợ."
+  ]
+}
